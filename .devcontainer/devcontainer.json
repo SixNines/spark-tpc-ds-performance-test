@@ -1,0 +1,11 @@
+{
+	"name": "Ubuntu",
+	"dockerFile": "Dockerfile",
+	"features": {
+		"ghcr.io/devcontainers/features/github-cli:1": {
+			"installDirectlyFromGitHubRelease": true,
+			"version": "latest"
+		},
+		"ghcr.io/joshuanianji/devcontainer-features/github-cli-persistence:1": {}
+	}
+}
