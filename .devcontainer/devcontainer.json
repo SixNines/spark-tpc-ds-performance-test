@@ -7,5 +7,12 @@
 			"version": "latest"
 		},
 		"ghcr.io/joshuanianji/devcontainer-features/github-cli-persistence:1": {}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-azuretools.vscode-docker"
+			]
+		}
 	}
 }
