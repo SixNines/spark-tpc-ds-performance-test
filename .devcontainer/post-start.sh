@@ -1,4 +1,5 @@
 #!/bin/bash
 
-sudo $SPARK_HOME/sbin/start-master.sh
-sudo $SPARK_HOME/sbin/start-worker.sh spark://${HOSTNAME}:7077
+# running as user vscode to simplify permissions
+$SPARK_HOME/sbin/start-master.sh
+$SPARK_HOME/sbin/start-worker.sh spark://${HOSTNAME}:7077

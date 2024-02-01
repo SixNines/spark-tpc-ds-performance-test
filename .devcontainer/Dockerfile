@@ -30,6 +30,8 @@ gpg --verify "${FILENAME}.asc" "${FILENAME}"
 tar -xzf $FILENAME -C /opt
 ln -s /opt/$SPARK_VERSION /opt/spark
 rm -f ${FILENAME}*
+chown -R vscode:vscode /opt/$SPARK_VERSION/*
+
 cat <<EOF2 > /etc/profile.d/spark.sh
 export SPARK_HOME=/opt/spark
 export PATH=\$PATH:\$SPARK_HOME/bin
