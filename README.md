@@ -12,6 +12,8 @@ JDK 1.8 (OpenJDK 8) is installed for Spark.
 
 Apache Spark 3.3.4 with Hadoop is installed in `/opt/spark`, with `$SPARK_HOME` set to this and `/opt/spark/sbin` added to `$PATH`.
 
+`$SPARK_MASTER_URL` is set to `spark://${HOSTNAME}:7077`.
+
 A single master and worker are started on container start via the DevContainer's `postStartCommand` attribute running `./.devcontainer/post-start.sh`.
 
 This is intended for small scale factors to work out the TPC-DS details.
@@ -20,7 +22,7 @@ You can test Spark quickly by running:
 ```
 spark-submit \
   --class org.apache.spark.examples.SparkPi \
-  --master local[8] \
+  --master $SPARK_MASTER_URL \
   $SPARK_HOME/examples/jars/spark-examples_2.13-3.3.4.jar
 ```
 

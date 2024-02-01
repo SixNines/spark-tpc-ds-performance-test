@@ -91,11 +91,11 @@ check_createtables() {
     return 1 
   fi
   
-  cd $SPARK_HOME
+  #cd $SPARK_HOME
   DRIVER_OPTIONS="--driver-memory 4g --driver-java-options -Dlog4j.configuration=file:///${output_dir}/log4j.properties"
   EXECUTOR_OPTIONS="--executor-memory 2g --conf spark.executor.extraJavaOptions=-Dlog4j.configuration=file:///${output_dir}/log4j.properties"
   logInfo "Checking pre-reqs for running TPC-DS queries. May take a few seconds.."
-  bin/spark-sql ${DRIVER_OPTIONS} ${EXECUTOR_OPTIONS} --conf spark.sql.catalogImplementation=hive -f ${TPCDS_WORK_DIR}/row_counts.sql > ${TPCDS_WORK_DIR}/rowcounts.out 2>&1
+  spark-sql ${MASTER_OPTIONS} ${DRIVER_OPTIONS} ${EXECUTOR_OPTIONS} --conf spark.sql.catalogImplementation=hive -f ${TPCDS_WORK_DIR}/row_counts.sql > ${TPCDS_WORK_DIR}/rowcounts.out 2>&1
   cat ${TPCDS_WORK_DIR}/rowcounts.out | grep -v "Time" | grep -v "SLF4J" >> ${TPCDS_WORK_DIR}/rowcounts.rrn
   file1=${TPCDS_WORK_DIR}/rowcounts.rrn
   file2=${TPCDS_ROOT_DIR}/src/ddl/rowcounts.expected
@@ -151,6 +151,10 @@ set_environment() {
   if [ -z "$TPCDS_WORK_DIR" ]; then
      TPCDS_WORK_DIR=${TPCDS_ROOT_DIR}/work
   fi  
+  
+  if [ -n "$SPARK_MASTER_URL" ]; then
+    MASTER_OPTIONS=" --master $SPARK_MASTER_URL"
+  fi
 }
 
 check_environment() {
@@ -332,15 +336,17 @@ function create_spark_tables {
   done 
   result=$?
   if [ "$result" -ne 1 ]; then 
-    current_dir=`pwd`
-    cd $SPARK_HOME
+    # current_dir=`pwd`
+    # cd $SPARK_HOME
     DRIVER_OPTIONS="--driver-java-options -Dlog4j.configuration=file:///${output_dir}/log4j.properties"
     EXECUTOR_OPTIONS="--conf spark.executor.extraJavaOptions=-Dlog4j.configuration=file:///${output_dir}/log4j.properties"
     logInfo "Creating tables. Will take a few minutes ..."
     ProgressBar 2 122
-    bin/spark-sql ${DRIVER_OPTIONS} ${EXECUTOR_OPTIONS} --conf spark.sql.catalogImplementation=hive -f ${TPCDS_WORK_DIR}/create_database.sql > ${TPCDS_WORK_DIR}/create_database.out 2>&1
+    set -x
+    spark-sql ${MASTER_OPTIONS} ${DRIVER_OPTIONS} ${EXECUTOR_OPTIONS} --conf spark.sql.catalogImplementation=hive -f ${TPCDS_WORK_DIR}/create_database.sql > ${TPCDS_WORK_DIR}/create_database.out 2>&1
     script_pid=$!
-    bin/spark-sql ${DRIVER_OPTIONS} ${EXECUTOR_OPTIONS} --conf spark.sql.catalogImplementation=hive -f ${TPCDS_WORK_DIR}/create_tables_work.sql > ${TPCDS_WORK_DIR}/create_tables.out 2>&1 &
+    spark-sql ${MASTER_OPTIONS} ${DRIVER_OPTIONS} ${EXECUTOR_OPTIONS} --conf spark.sql.catalogImplementation=hive -f ${TPCDS_WORK_DIR}/create_tables_work.sql > ${TPCDS_WORK_DIR}/create_tables.out 2>&1 &
+    set +x
     script_pid=$!
     cont=1
     error_code=0
@@ -371,7 +377,7 @@ function create_spark_tables {
       echo ""
       logInfo "Spark tables created successfully.."
     fi
-    cd $current_dir
+    # cd $current_dir
   fi
 }
 
