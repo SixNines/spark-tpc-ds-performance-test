@@ -1,6 +1,7 @@
 {
 	"name": "Ubuntu",
 	"dockerFile": "Dockerfile",
+	"postStartCommand": "${localWorkspaceFolder}/.devcontainer/post-start.sh",
 	"features": {
 		"ghcr.io/devcontainers/features/github-cli:1": {
 			"installDirectlyFromGitHubRelease": true,
