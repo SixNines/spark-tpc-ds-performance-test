@@ -96,7 +96,7 @@ check_createtables() {
   EXECUTOR_OPTIONS="--executor-memory 2g --conf spark.executor.extraJavaOptions=-Dlog4j.configuration=file:///${output_dir}/log4j.properties"
   logInfo "Checking pre-reqs for running TPC-DS queries. May take a few seconds.."
   spark-sql ${MASTER_OPTIONS} ${DRIVER_OPTIONS} ${EXECUTOR_OPTIONS} --conf spark.sql.catalogImplementation=hive -f ${TPCDS_WORK_DIR}/row_counts.sql > ${TPCDS_WORK_DIR}/rowcounts.out 2>&1
-  cat ${TPCDS_WORK_DIR}/rowcounts.out | grep -v "Time" | grep -v "SLF4J" >> ${TPCDS_WORK_DIR}/rowcounts.rrn
+  cat ${TPCDS_WORK_DIR}/rowcounts.out | grep "^[0-9]\+$" >> ${TPCDS_WORK_DIR}/rowcounts.rrn
   file1=${TPCDS_WORK_DIR}/rowcounts.rrn
   file2=${TPCDS_ROOT_DIR}/src/ddl/rowcounts.expected
   if cmp -s "$file1" "$file2"
