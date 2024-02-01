@@ -7,7 +7,9 @@
 # This is a mandatory parameter. Please provide the location of
 # spark installation.
 #######################################################################
-export SPARK_HOME=
+
+# already set in the Dockerfile for the devcontainer. 
+#export SPARK_HOME=
 
 #######################################################################
 # Script environment parameters. When they are not set the script

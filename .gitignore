@@ -9,3 +9,7 @@ dsdgen
 dsqgen
 bin/**
 src/toolkit/*
+spark-warehouse/
+metastore_db/
+/derby.log
+```
