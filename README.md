@@ -1,3 +1,29 @@
+# FORK README
+
+All notes specific to this fork are under this heading.
+
+## DevContainer Setup
+
+Base image is Microsoft's Ubuntu DevContainer image.
+
+TPC-DS 3.2 tools are installed in `/usr/local/bin` for easy access.
+
+JDK 1.8 (OpenJDK 8) is installed for Spark.
+
+Apache Spark 3.3.4 with Hadoop is installed in `/opt/spark`, with `$SPARK_HOME` set to this and `/opt/spark/sbin` added to `$PATH`.
+
+A single master and worker are started on container start via the DevContainer's `postStartCommand` attribute running `./.devcontainer/post-start.sh`.
+
+This is intended for small scale factors to work out the TPC-DS details.
+
+You can test Spark quickly by running:
+```
+spark-submit \
+  --class org.apache.spark.examples.SparkPi \
+  --master local[8] \
+  $SPARK_HOME/examples/jars/spark-examples_2.13-3.3.4.jar
+```
+
 # Explore Spark SQL and its performance using TPC-DS workload
 
 > Data Science Experience is now Watson Studio. Although some images in this code pattern may show the service as Data Science Experience, the steps and processes will still work.
