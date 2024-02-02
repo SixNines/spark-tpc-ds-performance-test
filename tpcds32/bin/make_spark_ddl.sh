@@ -16,7 +16,7 @@ for f in tpcds tpcds_source; do
         sed -E \
             -e '/^ *$/d' \
             -e 's/ +, *$/,/g' \
-            -e 's/( +)(date|time)(,?)/\1string\3/g' \
+            -e 's/( +)(date|time)(,? *)$/\1string\3/g' \
             -e 's/(char|varchar)\([0-9]+\)/string/g' \
             -e 's/decimal\(.+\)/double/g' \
             -e 's/ not null//g' |
