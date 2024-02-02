@@ -26,6 +26,53 @@ spark-submit \
   $SPARK_HOME/examples/jars/spark-examples_2.13-3.3.4.jar
 ```
 
+## Running tests with pregenerated TPC-DS 2.4 data
+
+```
+bin/tpcdsspark.sh
+```
+
+Choose 1 to create db, tables, and populate.
+
+Then Choose 2 or 3 to run the queries.
+
+
+## Generating data and queries with TPC-DS 3.2 tools
+
+These are installed with the DevContainer and are `/usr/local/bin`. Other support files are currently
+in `.devcontainer/setup` such as `tpcds.idx` and query template archive.
+
+1. Run `dsdgen` to create data:
+```
+dsdgen \
+  -dir try32 \
+  -scale 1 \
+  -verbose y \
+  -terminate n \
+  -dist .devcontainer/setup/tpcds.idx
+```
+
+`dsdgen` can be run in parallel to speed up large generations:
+```
+dsdgen –parallel 4 –child 1 *other-params* &
+dsdgen –parallel 4 –child 2 *other-params* &
+dsdgen –parallel 4 –child 3 *other-params* &
+dsdgen –parallel 4 –child 4 *other-params* &
+```
+
+2. Run `dsqgen` to generate queries:
+```
+dsqgen \
+  -dir query_templates \
+  -scale 1 \
+  -verbose y \
+  -out try32/query \
+  -input query_templates/templates.lst \
+  -dist .devcontainer/setup/tpcds.idx \
+  -dialect ansi
+```
+
+
 # Explore Spark SQL and its performance using TPC-DS workload
 
 > Data Science Experience is now Watson Studio. Although some images in this code pattern may show the service as Data Science Experience, the steps and processes will still work.
