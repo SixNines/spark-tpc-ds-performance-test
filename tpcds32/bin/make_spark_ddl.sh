@@ -46,7 +46,7 @@ printf "use TPCDS;\n" > "${sql_file}"
 for f in "${BASE_DIR}"/ddl/spark/*.tmp; do
     table_name=$(basename "${f}" .tmp)
     echo "drop table if exists ${table_name};" >> "${sql_file}"
-    sed "s/${table_name}/${table_name}_text/g" "${f}" >> "${sql_file}"
+    sed "s/create table ${table_name}/create table ${table_name}_text/g" "${f}" >> "${sql_file}" # temp table has _text suffix
     cat <<EOF >> "${sql_file}"
 )
 USING csv
