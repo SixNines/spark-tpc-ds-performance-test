@@ -3,7 +3,7 @@
 genqueries/*
 gendata/*
 work/*
-log/*
+log/
 *.o
 dsdgen
 dsqgen
@@ -11,5 +11,10 @@ bin/**
 src/toolkit/*
 spark-warehouse/
 metastore_db/
-/derby.log
-```
+derby.log
+tpcds32/gen_data/
+tpcds32/gen_queries/
+tpcds32/ddl/spark/
+tpcds32/output/
+tpcds32/query_variants_local_work/
+tpcds32/query_tmp/
