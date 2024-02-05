@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <Property name="TPCDS_LOG_DIR">/workspaces/spark-tpc-ds-perormance-test/tpcds32/log</Property>
+    </Properties>
+    <Appenders>
+        <RollingFile name="File" fileName="${TPCDS_LOG_DIR}/spark-tpcds.log"
+                     filePattern="${TPCDS_LOG_DIR}/spark-tpcds-%d{MM-dd-yyyy}.log.gz">
+            <PatternLayout>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="File"/>
+        </Root>
+        <Logger name="org.apache.spark.repl.Main" level="warn"/>
+        <Logger name="org.spark_project.jetty" level="warn"/>
+        <Logger name="org.spark_project.jetty.util.component.AbstractLifeCycle" level="error"/>
+        <Logger name="org.apache.spark.repl.SparkIMain$exprTyper" level="info"/>
+        <Logger name="org.apache.spark.repl.SparkILoop$SparkILoopInterpreter" level="info"/>
+        <Logger name="org.apache.parquet" level="error"/>
+        <Logger name="parquet" level="error"/>
+        <Logger name="org.apache.hadoop.hive.metastore.RetryingHMSHandler" level="fatal"/>
+        <Logger name="org.apache.hadoop.hive.ql.exec.FunctionRegistry" level="error"/>
+    </Loggers>
+</Configuration>
