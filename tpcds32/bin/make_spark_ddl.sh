@@ -2,15 +2,18 @@
 
 BASE_DIR="$(dirname "$(dirname "$(readlink -f "$0")")")"
 
-# This code:
+if [ ! -d "${BASE_DIR}"/ddl/spark ]; then
+    mkdir -p "${BASE_DIR}"/ddl/spark
+else
+    rm -rf "${BASE_DIR}"/ddl/spark/*
+fi 
+
 # 1. Removes comments and empty lines from the official TPC-DS DDL file
-# 2. Converts the DDL to Spark SQL syntax
-# 3. Writes the Spark SQL DDL to individual files in the ddl/spark directory
-# 4. Converts CHAR and VARCHAR to STRING
-# 5. Converts DECIMAL to DOUBLE
-# 6. Removes NOT NULL constraints
-# 7. Removes PRIMARY KEY constraints
-# might need to convert date to string.  The IBM code does that.
+# 2. Writes the Spark SQL DDL to individual .tmp files in the ddl/spark directory
+# 3. Converts CHAR, VARCHAR, DATE, TIME to STRING
+# 4. Converts DECIMAL to DOUBLE
+# 5. Removes NOT NULL constraints
+# 6. Removes PRIMARY KEY constraints
 for f in tpcds tpcds_source; do
     grep -v '^--' "${BASE_DIR}"/ddl/official/${f}.sql | grep -v '^);' |
         sed -E \
@@ -40,9 +43,11 @@ for f in tpcds tpcds_source; do
             }'
 done
 
+# Create the final Spark SQL DDL file
 sql_file="${BASE_DIR}"/ddl/spark/tables.sql
-printf "use TPCDS;\n" > "${sql_file}"
+rm -f "${sql_file}"
 
+# For each table, create a text table, load the data, create a parquet table, and drop the text table
 for f in "${BASE_DIR}"/ddl/spark/*.tmp; do
     table_name=$(basename "${f}" .tmp)
     echo "drop table if exists ${table_name};" >> "${sql_file}"
