@@ -21,8 +21,6 @@ while getopts ":x:" opt; do
 done
 shift $((OPTIND -1))
 
-
-
 LOG4J_CONF="${BASE_DIR}/misc/log4j2.xml"
 
 DRIVER_OPTIONS="--driver-memory 4g --driver-java-options -Dlog4j.configurationFile=file:///${LOG4J_CONF}"
@@ -33,6 +31,7 @@ rm -rf "${BASE_DIR}"/output/*
 # Run the TPC-DS queries
 for q in "${BASE_DIR}"/gen_queries/*${SUFFIX}.sql; do
     query_name=$(basename "${q}" .sql)
+    outfile="${BASE_DIR}/output/${query_name}.out"
     echo "Running query: ${query_name}"
     spark-sql \
         --master ${SPARK_MASTER_URL} \
@@ -40,5 +39,5 @@ for q in "${BASE_DIR}"/gen_queries/*${SUFFIX}.sql; do
         ${DRIVER_OPTIONS} \
         ${EXECUTOR_OPTIONS} \
         -f "${q}" \
-        &> "${BASE_DIR}/output/${query_name}.out"
+        &> "${outfile}"
 done
