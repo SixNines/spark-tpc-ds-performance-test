@@ -13,7 +13,8 @@
 		"vscode": {
 			"extensions": [
 				"ms-azuretools.vscode-docker",
-				"rogalmic.bash-debug"
+				"rogalmic.bash-debug",
+				"adpyke.vscode-sql-formatter"
 			]
 		}
 	}
